@@ -1,9 +1,18 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
 const connectDB = async () => {
-  const uri = process.env.MONGO_URI || 'mongodb://localhost:27017/smart_hospital';
-  await mongoose.connect(uri);
-  console.log('MongoDB connected to', uri);
+  try {
+    await mongoose.connect(process.env.MONGODB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      ssl: true,                        // ✅ enable SSL/TLS
+      tlsAllowInvalidCertificates: true // ✅ allow Render’s certificates
+    });
+    console.log("✅ MongoDB connected successfully!");
+  } catch (error) {
+    console.error("❌ MongoDB connection error:", error.message);
+    process.exit(1);
+  }
 };
 
-module.exports = connectDB;
+export default connectDB;
